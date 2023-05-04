@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(value = "http://localhost:3000",allowCredentials = "true")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -21,11 +21,10 @@ public class UserController {
 
     @PostMapping("/user")
     User newUser(@RequestBody User newUser){
-       return userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
     @GetMapping("/secured/users")
-    List<User> getAllUsers(@CookieValue("userName") String userName) {
-        String user = userName;
+    List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -37,16 +36,20 @@ public class UserController {
 
     @PostMapping("/user/login")
     boolean login(@RequestBody User searchedUser){
+        return authenticate(searchedUser.getUsername(),searchedUser.getPassword());
+    }
+    public boolean authenticate(String userName, String password){
         List<User> users =  userRepository.findAll().stream().toList();
-        List<User> foundUserList = users.stream().filter((user)-> user.getUsername().equals(searchedUser.getUsername())).toList();
+        List<User> foundUserList = users.stream().filter((user)-> user.getUsername().equals(userName)).toList();
 
         if(foundUserList.isEmpty()){
             throw new UserNotFoundException();
         }
         User foundUser= foundUserList.get(0);
-        return foundUser.getPassword().equals(searchedUser.getPassword());
+        boolean isSameUser  =foundUser.getPassword().equals(password);
+        System.out.println(isSameUser);
+        return isSameUser;
     }
-
     @PutMapping("/secured/user/{id}")
     User updateUser(@RequestBody User newUser, @PathVariable Long id){
         return userRepository.findById(id)
@@ -63,24 +66,26 @@ public class UserController {
             throw new UserNotFoundException(id);
         }
         String name = userRepository.findById(id).get().getUsername();
-
         userRepository.deleteById(id);
         String text = " deleted with. number id: " + id;
-        return "User: " + name +text;
+        return "User: " + name + text;
     }
     @GetMapping("/secured/data")//                @CookieValue("username") String userName,@CookieValue("password") String password
-    public List<Map<String, Object>> getData(@CookieValue("userName") String userName,@CookieValue("password") String password) {
-        User user  = new User(userName,password,"");
-        if(login(user)){
-            String sql = "SELECT * FROM nba_stats";
-            return jdbcTemplate.queryForList(sql);
+    public List<Map<String, Object>> getData() {
+        String sql = "SELECT * FROM nba_stats";
+        return jdbcTemplate.queryForList(sql);
         }
-        throw new UserNotFoundException();
+    @GetMapping("/secured/data22")
+    public List<Map<String, Object>> getData22(){
+        String sql = "SELECT * FROM nba_stats22";
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    @GetMapping("/secured/data21")
+    public List<Map<String, Object>> getData21(){
+        String sql = "SELECT * FROM nba_stats21";
+        return jdbcTemplate.queryForList(sql);
     }
 
 
-//    @GetMapping("/players")
-//    List<NbaStats> getAllnbaStats() {
-//        return nbaStatsRepository.findAll();
-//    }
 }
