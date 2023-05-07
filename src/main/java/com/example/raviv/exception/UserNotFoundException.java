@@ -7,6 +7,6 @@ public class UserNotFoundException extends RuntimeException{
         super("Could not found the user with id: " + id);
     }
     public UserNotFoundException(){
-        super("Could not found the user" );
+        super("UserNotFound" );
     }
 }

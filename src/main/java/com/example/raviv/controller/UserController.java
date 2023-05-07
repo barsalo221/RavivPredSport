@@ -1,6 +1,8 @@
 package com.example.raviv.controller;
 
+import com.example.raviv.exception.UserExistsException;
 import com.example.raviv.exception.UserNotFoundException;
+import com.example.raviv.exception.UserNotFullException;
 import com.example.raviv.model.User;
 import com.example.raviv.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,18 @@ public class UserController {
 
     @PostMapping("/user")
     User newUser(@RequestBody User newUser){
+        List<User> users =  userRepository.findAll().stream().toList();
+        for (User user: users) {
+            if(user.getUsername().equals(newUser.getUsername())) {
+                throw new UserExistsException();
+            }
+            if(newUser.getUsername().isEmpty() || newUser.getPassword().isEmpty()||newUser.getEmail().isEmpty()){
+                throw new UserNotFullException();
+            }
+        }
         return userRepository.save(newUser);
     }
+
     @GetMapping("/secured/users")
     List<User> getAllUsers() {
         return userRepository.findAll();
@@ -80,7 +92,6 @@ public class UserController {
         String sql = "SELECT * FROM nba_stats22";
         return jdbcTemplate.queryForList(sql);
     }
-
     @GetMapping("/secured/data21")
     public List<Map<String, Object>> getData21(){
         String sql = "SELECT * FROM nba_stats21";
