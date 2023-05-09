@@ -9,8 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(value = "http://localhost:3000",allowCredentials = "true")
@@ -42,7 +47,8 @@ public class UserController {
 
     @GetMapping("/secured/user/{id}")
     User getUserById(@PathVariable Long id){
-        return userRepository.findById(id)
+        Optional<User> user = userRepository.findById(id);
+        return user
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
@@ -96,6 +102,32 @@ public class UserController {
     public List<Map<String, Object>> getData21(){
         String sql = "SELECT * FROM nba_stats21";
         return jdbcTemplate.queryForList(sql);
+    }
+
+        @GetMapping("/secured/predictstats")
+    public String getPredictedStats() throws IOException, InterruptedException {
+        String dir = "C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model";
+        String command = "python main.py";
+        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command );
+        StringBuilder output = new StringBuilder();
+        builder.directory(new File(dir));
+
+        //builder.redirectErrorStream(true);
+        Process process = builder.start();
+
+        // Read output
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            output.append(line).append("\n");
+        }
+        reader.close();
+
+        // Wait for process to finish
+        int exitCode = process.waitFor();
+        System.out.println("Process exited with code " + exitCode);
+        return output.toString();
+
     }
 
 
