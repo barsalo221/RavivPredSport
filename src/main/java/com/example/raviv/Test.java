@@ -1,14 +1,18 @@
 package com.example.raviv;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Test {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, JSONException {
         String dir = "C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model";
-        String command = "python main.py";
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("Player", "James Bouknight");
+        String command = "python main.py " ;//+ jsonObject.toString();
         ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command );
         builder.directory(new File(dir));
 

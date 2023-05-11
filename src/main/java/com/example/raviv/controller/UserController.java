@@ -3,22 +3,21 @@ package com.example.raviv.controller;
 import com.example.raviv.exception.UserExistsException;
 import com.example.raviv.exception.UserNotFoundException;
 import com.example.raviv.exception.UserNotFullException;
+import com.example.raviv.model.Player;
 import com.example.raviv.model.User;
 import com.example.raviv.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(value = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(value = "http://localhost:3000/" ,allowCredentials = "true")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -26,6 +25,37 @@ public class UserController {
     private JdbcTemplate jdbcTemplate;
 
 
+
+    @PostMapping("/secured/try")
+    public String tryFunc(){
+        return "try";
+    }
+
+    @PostMapping("/secured/predictstats")
+    public String createPlayerFile(@RequestBody Player[] jsonArr){
+        ObjectMapper objectMapper = new ObjectMapper();
+//
+//        for (Player json : jsonArr) {
+//            try {
+//                // parse the JSON object
+//                Object jsonObject = objectMapper.readValue(json, Object.class);
+//
+//                // create a new file with a unique filename
+//                String filename = "C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model\\sumbit.txt";
+//                File file = new File(filename);
+//
+//                // write the JSON object to the file
+//                FileWriter fileWriter = new FileWriter(file);
+//                objectMapper.writeValue(fileWriter, jsonObject);
+//                fileWriter.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return "Error: " + e.getMessage();
+//            }
+//        }
+
+        return "Files created successfully";
+    }
     @PostMapping("/user")
     User newUser(@RequestBody User newUser){
         List<User> users =  userRepository.findAll().stream().toList();
@@ -104,10 +134,12 @@ public class UserController {
         return jdbcTemplate.queryForList(sql);
     }
 
-        @GetMapping("/secured/predictstats")
+//    @PostMapping("/secured/predictstats")
     public String getPredictedStats() throws IOException, InterruptedException {
         String dir = "C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model";
-        String command = "python main.py";
+        File pla = new File("submit.txt", "w");
+
+        String command = "python main.py  path, pathres";
         ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command );
         StringBuilder output = new StringBuilder();
         builder.directory(new File(dir));
