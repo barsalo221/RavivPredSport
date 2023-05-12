@@ -10,9 +10,8 @@ import java.io.InputStreamReader;
 public class Test {
     public static void main(String[] args) throws IOException, InterruptedException, JSONException {
         String dir = "C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model";
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("Player", "James Bouknight");
-        String command = "python main.py " ;//+ jsonObject.toString();
+
+        String command = "python predict.py";
         ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", command );
         builder.directory(new File(dir));
 
@@ -30,36 +29,6 @@ public class Test {
         // Wait for process to finish
         int exitCode = process.waitFor();
         System.out.println("Process exited with code " + exitCode);
-
-//        Runtime rt = Runtime.getRuntime();
-//        try {
-//            rt.exec(new String[]{"cmd.exe","/c","start"});
-//
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        PythonInterpreter pythonInterpreter = new PythonInterpreter();
-//            pythonInterpreter.execfile("C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model\\main.py");
-
-
-
-
-//        ProcessBuilder builder = new ProcessBuilder("C:\\Users\\barsa\\OneDrive\\שולחן העבודה\\project BE + FE + model\\model\\main.py", "-version");
-//        builder.redirectErrorStream(true);
-//        Process pr = builder.start();
-//
-//        BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-//        String line;
-//        while ((line = in.readLine()) != null){
-//            System.out.print(line);
-//        }
-//        pr.waitFor();
-//        System.out.print("ok!");
-//
-//        in.close();
-//        System.exit(0);
-
 
     }
 }

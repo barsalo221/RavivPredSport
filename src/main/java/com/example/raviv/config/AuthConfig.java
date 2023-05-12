@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -29,16 +30,18 @@ public class AuthConfig implements WebMvcConfigurer {
     }
 
     public class AuthInterceptor implements HandlerInterceptor {
-
-
         public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) {
-            Cookie userNameC = WebUtils.getCookie(req, "userName");
-            Cookie passwordC = WebUtils.getCookie(req, "password");
-            if (passwordC == null || userNameC == null) {
-                return false;
-            }
+            if (!req.getMethod().equals(HttpMethod.OPTIONS.toString())) {
+                Cookie userNameC = WebUtils.getCookie(req, "userName");
+                Cookie passwordC = WebUtils.getCookie(req, "password");
+                if (passwordC == null || userNameC == null) {
+                    return false;
+                }
 //            System.out.println("cookie is set: "+userNameC.getValue());
-            return userController.authenticate(userNameC.getValue(), passwordC.getValue());
+                return userController.authenticate(userNameC.getValue(), passwordC.getValue());
+            }
+            return true;
         }
+
     }
 }
