@@ -101,20 +101,20 @@ public class UserController {
 
     @GetMapping("/secured/data")
 //                @CookieValue("username") String userName,@CookieValue("password") String password
-    public List<Map<String, Object>> getData() {
-        String sql = "SELECT * FROM nba_stats";
+    public List<Map<String, Object>> getData23() {
+        String sql = "SELECT * FROM predsport.stats2023";
         return jdbcTemplate.queryForList(sql);
     }
 
     @GetMapping("/secured/data22")
     public List<Map<String, Object>> getData22() {
-        String sql = "SELECT * FROM nba_stats22";
+        String sql = "SELECT * FROM predsport.stats2022";
         return jdbcTemplate.queryForList(sql);
     }
 
     @GetMapping("/secured/data21")
     public List<Map<String, Object>> getData21() {
-        String sql = "SELECT * FROM nba_stats21";
+        String sql = "SELECT * FROM predsport.stats2021";
         return jdbcTemplate.queryForList(sql);
     }
 
