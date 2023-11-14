@@ -77,6 +77,7 @@ public class UserController {
         return isSameUser;
     }
 
+    //sdasdasd
     @PutMapping("/secured/user/{id}")
     User updateUser(@RequestBody User newUser, @PathVariable Long id) {
         return userRepository.findById(id)
@@ -98,8 +99,14 @@ public class UserController {
         String text = " deleted with. number id: " + id;
         return "User: " + name + text;
     }
+    @GetMapping("/secured/data24")
+//                @CookieValue("username") String userName,@CookieValue("password") String password
+    public List<Map<String, Object>> getData24() {
+        String sql = "SELECT * FROM predsport.stats2024";
+        return jdbcTemplate.queryForList(sql);
+    }
 
-    @GetMapping("/secured/data")
+    @GetMapping("/secured/data23")
 //                @CookieValue("username") String userName,@CookieValue("password") String password
     public List<Map<String, Object>> getData23() {
         String sql = "SELECT * FROM predsport.stats2023";
